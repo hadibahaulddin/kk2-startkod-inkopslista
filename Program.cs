@@ -39,7 +39,14 @@ if (choice == 1)
     Console.WriteLine("Skriv numret på varan som en siffra.");
     continue;
 }
-        list.RemoveAt(number);
+        try
+{
+    list.RemoveAt(number);
+}
+catch (ArgumentOutOfRangeException)
+{
+    Console.WriteLine("Det finns ingen vara med det numret.");
+}
     }
     else if (choice == 3)
     {
