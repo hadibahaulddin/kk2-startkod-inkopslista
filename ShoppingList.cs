@@ -79,8 +79,14 @@ class ShoppingList
     }
 
     // Reads the file back into the list.
-        public void Load()
+            public void Load()
     {
+        if (!File.Exists(path))
+        {
+            Console.WriteLine("Hittade ingen sparad lista. Börjar med en tom lista.");
+            return;
+        }
+
         foreach (string line in File.ReadAllLines(path))
         {
             string[] parts = line.Split(';');
