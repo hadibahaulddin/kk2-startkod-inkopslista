@@ -95,7 +95,8 @@ catch (IOException)
         {
             string[] parts = line.Split(';');
             if (parts.Length < 2) continue;
-            items.Add(new Item(parts[1].Trim(), int.Parse(parts[0])));
+            if (!int.TryParse(parts[0], out int price)) continue;
+            items.Add(new Item(parts[1].Trim(), price));
         }
     }
 }
