@@ -1,16 +1,23 @@
 // Holds the items and takes care of loading and saving them.
 class ShoppingList
 {
-    private List<Item> items = new List<Item>();
+        private List<Item> items = new List<Item>();
     private string path;
+    private int budget;
 
-    public ShoppingList(string path)
+    public ShoppingList(string path, int budget)
     {
         this.path = path;
+        this.budget = budget;
     }
 
     public void Add(Item item)
     {
+        if (Total() + item.Price > budget)
+        {
+            throw new InvalidOperationException($"Varan får inte plats i budgeten. Taket är {budget} kr.");
+        }
+
         items.Add(item);
     }
 
