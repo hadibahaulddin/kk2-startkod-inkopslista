@@ -19,3 +19,39 @@ När jag döpte om items.txt och startade programmet igen sån kraschade det dir
 
 ### Fel 6 
 Det här felet märktes inte när jag körde programmet eftersom sparningen fungerade alltid på min dator. Jag hittade felet först när jag läste koden i Save() och där fanns en catch som var helt tom. Ifall sparningen gick fel fångades felet, men programmet gjorde ingenting med det, så jag fick inte veta att något hade gått snett. Dessutom skrev programmet alltid ut "Listan är sparad.", till o med när sparningen misslyckades. Detta dår alltså användaren att tro att listan var sparad, och sedan märka att varorna var borta nästa gång programmet startades. Jag löste detta genom att flytta meddelandet "Listan är sparad." in till try-blocket, så att det bara visas när sparningen faktiskt fungerar. Jag bytte även den tomma catchen mot två catch som fångar specifika fel, UnauthorizedAccessException och IOException, och som talar om för användaren att listan inte kunde sparas.För att testa detta gjorde jag items.txt skrivskyddad, och nu säger programmet att listan inte kunde sparas, istället för att låtsas att den var sparad.
+
+## Designval 
+Istället för att retunera false så valde jag att låta Add kasta ett undantag istället när en vara skulle göra att listan går över budgettaaket. Anledningen till varför jag valde på de sättet är att det passar ihop med resten av programmet. Item kastar redan undantag när namnet är tomt eller priset är negativt, och i Program.cs finns det redan ett try/catch runt list.Add som fångar dem. Jag behövde bara lägga till ett catch-block till för budgettaket, och alla anledningar till att en vara inte får läggas till hanteras på samma ställe.
+Ett annat skäl är att man inte kan glömma bort ett undantag. Om Add hade returnerat false måste man komma ihåg att kolla svaret varje gång eller om man glömmer det läggs varan bara inte till, utan att användaren får veta varför.
+Jag använde InvalidOperationException och inte ArgumentException. Det är inget fel på själva varan, utan problemet är att listan redan är för dyr för att varan ska få plats. Det gör också att Program.cs kan skilja på felen och visa rätt meddelande.
+Det Program.cs gör med svaret är att fånga undantaget, skriva ut meddelandet till användaren och sedan fortsätta som vanligt.
+
+
+## Klassdiagram
+```mermaid
+classDiagram
+    class Program {
+        +Main()
+    }
+    class ShoppingList {
+        -List~Item~ items
+        -string path
+        -int budget
+        +ShoppingList(path, budget)
+        +Add(item)
+        +RemoveAt(number)
+        +Total() int
+        +Find(name) Item
+        +Print()
+        +Save()
+        +Load()
+    }
+    class Item {
+        +string Name
+        +int Price
+        +Item(name, price)
+        +ToString() string
+    }
+    Program --> ShoppingList : använder
+    ShoppingList "1" --> "*" Item : innehåller
+```
