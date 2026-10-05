@@ -68,14 +68,18 @@ class ShoppingList
         }
 
         try
-        {
-            File.WriteAllText(path, string.Join("\r\n", lines) + "\r\n");
-        }
-        catch
-        {
-        }
-
-        Console.WriteLine("Listan är sparad.");
+{
+    File.WriteAllText(path, string.Join("\r\n", lines) + "\r\n");
+    Console.WriteLine("Listan är sparad.");
+}
+catch (UnauthorizedAccessException)
+{
+    Console.WriteLine("Kunde inte spara listan. Programmet har inte behörighet att skriva till filen.");
+}
+catch (IOException)
+{
+    Console.WriteLine("Kunde inte spara listan. Filen kanske används av ett annat program.");
+}
     }
 
     // Reads the file back into the list.
